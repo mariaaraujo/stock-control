@@ -1,5 +1,4 @@
 import { ObjectId } from 'mongodb'
-import bcrypt from 'bcrypt'
 
 import { ResponseDTO, User, UserDTO, UserResponse, UserUpdateDTO } from '@/dtos'
 import { database } from '@/config'
@@ -36,8 +35,6 @@ export class UserService implements UserInterface {
           },
         }
       }
-
-      userDTO.password = await this.hashPassword(userDTO.password)
 
       const insertUser = await database.collection('user').insertOne(userDTO)
 
@@ -139,8 +136,6 @@ export class UserService implements UserInterface {
       }
 
       if (userUpdateDTO.password) {
-        userUpdateDTO.password = await this.hashPassword(userUpdateDTO.password)
-
         await database.collection('user').updateOne(
           {
             _id: new ObjectId(userId),
@@ -242,15 +237,6 @@ export class UserService implements UserInterface {
       console.error('Error to get users: ', e)
       return { status: 400, message: { error: 'Error to get users: ' + e } }
     }
-  }
-
-  private async hashPassword(
-    password: string,
-    saltRounds: number = 10,
-  ): Promise<string> {
-    const salt = await bcrypt.genSalt(saltRounds)
-
-    return await bcrypt.hash(password, salt)
   }
 
   private handleError(message: string, status: number = 400): ResponseDTO {

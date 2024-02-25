@@ -1,7 +1,7 @@
 import { ResponseDTO, UserLogin } from '@/dtos'
 
 import { UserService } from './User'
-import { HashComparer } from '../cryptography/BCryptAdapter'
+import { database } from '@/config'
 
 interface AuthenticationInterface {
   login: (userLogin: UserLogin) => Promise<ResponseDTO>
@@ -10,7 +10,7 @@ interface AuthenticationInterface {
 export class AuthenticationService implements AuthenticationInterface {
   private readonly userService: UserService
 
-  constructor(private readonly hashComparer: HashComparer) {
+  constructor() {
     this.userService = new UserService()
   }
 
@@ -29,10 +29,10 @@ export class AuthenticationService implements AuthenticationInterface {
         }
       }
 
-      const isPasswordValid = await this.hashComparer.compare(
-        userLogin?.password,
-        userExists?.password!,
-      )
+      const isPasswordValid = await database.collection('user').findOne({
+        login: userLogin?.login,
+        password: userLogin?.password,
+      })
 
       if (!isPasswordValid) {
         console.error(`Wrong Password.`)

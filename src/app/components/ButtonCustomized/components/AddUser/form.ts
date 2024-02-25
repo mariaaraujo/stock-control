@@ -13,7 +13,7 @@ export const UserFormSchema = yup.object({
   name: yup.string().required('O Nome é obrigatório'),
   login: yup.string().required('O Login é obrigatório'),
   role: yup.string().required('O Perfil é obrigatório'),
-  password: yup.string(),
+  password: yup.string().required('A senha é obrigatória'),
 })
 
 export const setUser = (

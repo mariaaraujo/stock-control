@@ -1,11 +1,9 @@
 import { cookies } from 'next/headers'
 import { NextRequest, NextResponse } from 'next/server'
 
-import { BcryptAdapter } from '@/service/cryptography/BCryptAdapter'
 import { AuthenticationService } from '@/service/user/Authentication'
 
-const bcryptAdapter = new BcryptAdapter(12)
-const authenticationService = new AuthenticationService(bcryptAdapter)
+const authenticationService = new AuthenticationService()
 
 export const POST = async (req: NextRequest, res: NextResponse) => {
   const userLogin = await req.json()
