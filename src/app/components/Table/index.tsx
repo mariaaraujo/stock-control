@@ -5,6 +5,7 @@ import { Edit, Pencil, Trash } from 'lucide-react'
 import { useState } from 'react'
 import { AddProduct } from '../ButtonCustomized/components/AddProduct'
 import { DeleteModal } from '../DeleteModal'
+import { AddUser } from '../ButtonCustomized/components/AddUser'
 
 interface TableProps {
   headers: string[]
@@ -126,7 +127,13 @@ export function Table({ headers, rows, api, refresh, userId }: TableProps) {
           refresh={refresh}
         />
       ) : (
-        <></>
+        <AddUser
+          setOpenModal={setOpenEditModal}
+          openModal={openEditModal}
+          userId={itemId}
+          setUserId={setItemId}
+          refresh={refresh}
+        />
       )}
     </>
   )

@@ -97,6 +97,7 @@ export class UserService implements UserInterface {
         login: userCursor?.login,
         name: userCursor?.name,
         role: userCursor?.role,
+        password: userCursor?.password,
       }
     } catch (error) {
       console.error(

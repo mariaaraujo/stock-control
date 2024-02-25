@@ -13,7 +13,7 @@ interface ProductInterface {
 
   getById(productId: string): Promise<ProductResponse | null>
 
-  get: (filter?: { name?: string }) => Promise<ResponseDTO>
+  get: (userId: string, filter?: { name?: string }) => Promise<ResponseDTO>
 }
 
 export class ProductService implements ProductInterface {
@@ -140,12 +140,14 @@ export class ProductService implements ProductInterface {
     }
   }
 
-  public async get(filter?: { name?: string }): Promise<ResponseDTO> {
+  public async get(
+    userId: string,
+    filter?: { name?: string },
+  ): Promise<ResponseDTO> {
     try {
       const productsResponse = await database
         .collection('product')
-        .find(filter!)
-        // .sort(orderBy ?? {})
+        .find({ userId: new ObjectId(userId) })
         .toArray()
 
       const products: ProductResponse[] = []

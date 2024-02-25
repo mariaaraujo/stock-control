@@ -3,6 +3,7 @@
 import { Button } from '@material-tailwind/react'
 import { useState } from 'react'
 import { AddProduct } from './components/AddProduct'
+import { AddUser } from './components/AddUser'
 
 interface ButtonCustomizedProps {
   title: string
@@ -37,7 +38,11 @@ export function ButtonCustomized({
           refresh={refresh}
         />
       ) : (
-        <></>
+        <AddUser
+          openModal={openModal}
+          setOpenModal={setOpenModal}
+          refresh={refresh}
+        />
       )}
     </>
   )

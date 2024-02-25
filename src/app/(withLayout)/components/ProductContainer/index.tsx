@@ -19,7 +19,9 @@ export function ProductContainer({ isAuthenticated }: ProductContainerProps) {
 
   async function getProducts() {
     try {
-      const { data, status } = await axios.get('/api/product/get')
+      const { data, status } = await axios.get(
+        `/api/product/get?userId=${isAuthenticated}`,
+      )
       if (status === 200) {
         setProducts(
           data?.message?.products?.map((item: ProductResponse) => {

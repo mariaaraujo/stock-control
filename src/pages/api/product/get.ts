@@ -8,14 +8,16 @@ export default async function handler(
   res: NextApiResponse,
 ) {
   if (req.method === 'GET') {
-    const filter = req.query.filter?.toString()
+    const userId = req.query.userId?.toString()
 
-    const params = {
-      filter: filter ? JSON.parse(filter) : {},
-    }
+    // const filter = req.query.filter?.toString()
+
+    // const params = {
+    //   filter: filter ? JSON.parse(filter) : {},
+    // }
 
     try {
-      const products = await productService.get(params?.filter)
+      const products = await productService.get(userId!)
 
       return res.status(200).send(products)
     } catch (e) {
