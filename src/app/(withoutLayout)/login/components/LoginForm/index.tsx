@@ -9,9 +9,8 @@ import { useForm } from 'react-hook-form'
 import { yupResolver } from '@hookform/resolvers/yup'
 import { Button, Input } from '@material-tailwind/react'
 
-import { Loading } from '@/components'
-import { setCookieClientSide } from '@/utils'
 import { LoginFormType, LoginFormSchema } from './form'
+import { Loading } from '@/app/components'
 
 export function LoginForm() {
   const [showLoading, setShowLoading] = useState(false)
@@ -29,13 +28,9 @@ export function LoginForm() {
   async function onSubmit(values: LoginFormType) {
     setShowLoading(true)
     try {
-      const { status, data } = await axios.post('/api/user/login', values)
+      const { status, data } = await axios.post('/api/login', values)
 
       if (status === 200 && data) {
-        setCookieClientSide('stock-userId', data.message?.id)
-        setCookieClientSide('stock-userName', data.message?.name)
-        setCookieClientSide('stock-userRole', data.message?.role)
-
         await router.push('/')
 
         setShowLoading(false)
