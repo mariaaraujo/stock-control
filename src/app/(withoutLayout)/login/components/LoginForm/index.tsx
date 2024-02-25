@@ -14,6 +14,7 @@ import { Loading } from '@/app/components'
 
 export function LoginForm() {
   const [showLoading, setShowLoading] = useState(false)
+  const [error, setError] = useState('')
   const {
     register,
     handleSubmit,
@@ -27,9 +28,15 @@ export function LoginForm() {
   async function onSubmit(values: LoginFormType) {
     setShowLoading(true)
     try {
-      const { status, data } = await axios.post('/api/login', values)
+      const { data } = await axios.post('/api/login', values)
 
-      if (status === 200 && data) {
+      if (data?.status === 400) {
+        setShowLoading(false)
+
+        setError('Login ou senha incorreto')
+      }
+
+      if (data?.status === 200 && data) {
         await router.push('/')
 
         setShowLoading(false)
@@ -50,7 +57,9 @@ export function LoginForm() {
             crossOrigin=""
             color="gray"
             label="Login"
-            {...register('login')}
+            {...register('login', {
+              onChange: () => setError(''),
+            })}
           />
           <div className="-mt-3 text-red-700 text-xs">
             {errors.login?.message ?? ''}
@@ -60,10 +69,13 @@ export function LoginForm() {
             color="gray"
             label="Senha"
             type="password"
-            {...register('password')}
+            {...register('password', {
+              onChange: () => setError(''),
+            })}
           />
           <div className="-mt-3 text-red-700 text-xs">
             {errors.password?.message ?? ''}
+            {error ?? ''}
           </div>
           <Button
             type="submit"

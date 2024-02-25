@@ -10,7 +10,7 @@ export const POST = async (req: NextRequest, res: NextResponse) => {
 
   try {
     const login = await authenticationService.login(userLogin)
-    if (login?.message) {
+    if (typeof login?.message === 'object') {
       const d = new Date()
       d.setTime(d.getTime() + 365 * 24 * 60 * 60 * 1000)
 
