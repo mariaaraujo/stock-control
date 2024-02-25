@@ -37,16 +37,7 @@ export class UserService implements UserInterface {
         }
       }
 
-      const hashedPassword = await this.hashPassword(userDTO.password)
-
-      const user = await database.collection('user').insertOne({
-        name: userDTO.name,
-        login: userDTO.login,
-        password: hashedPassword,
-        role: userDTO.role,
-      })
-
-      return { status: 200, message: { id: user.insertedId } }
+      return { status: 200, message: { alreadyRegistered } }
     } catch (error) {
       console.error('Error to create user: ', error)
 
@@ -75,6 +66,7 @@ export class UserService implements UserInterface {
         role: userCursor?.role,
         name: userCursor.name,
         login: userCursor.login,
+        password: userCursor.password,
       }
     } catch (error) {
       console.error(

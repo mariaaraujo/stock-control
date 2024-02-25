@@ -21,8 +21,10 @@ export interface UserResponse {
   login: string
   name: string
   role: string
+  password?: string
 }
 
 export interface UserLogin {
   login: string
+  password: string
 }
