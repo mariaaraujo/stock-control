@@ -16,7 +16,6 @@ export function LoginForm() {
   const [showLoading, setShowLoading] = useState(false)
   const {
     register,
-    setError,
     handleSubmit,
     formState: { errors },
   } = useForm<LoginFormType>({

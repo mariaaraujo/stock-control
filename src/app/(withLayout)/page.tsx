@@ -1,6 +1,8 @@
 import { cookies } from 'next/headers'
 import { redirect } from 'next/navigation'
-// import { Header } from './components'
+import { Table } from '../components/Table'
+import { AddProduct } from '../components/AddProduct'
+import { ButtonCustomized } from '../components/ButtonCustomized'
 
 export default async function Home() {
   const isAuthenticated = cookies().get('stock-userId')
@@ -9,12 +11,20 @@ export default async function Home() {
     redirect('/login')
   }
 
-  const userRole = cookies().get('stock-userRole')?.value
-  const userName = cookies().get('stock-userName')?.value
+  const productHeaders = ['ID', 'Nome', 'Preço', 'Data']
+  const productRows = [
+    { ID: '23123', Nome: 'Uva', Preço: 279.08, Data: '2024-03-25' },
+    { ID: '3213123', Nome: 'Abacate', Preço: 29.08, Data: '2024-02-14' },
+  ]
 
   return (
-    <div className="w-full flex pt-10 pl-8 lg:pt-5 lg:pl-20">
-      <h1 className="text-2xl">Lista de Produtos</h1>
-    </div>
+    <>
+      <div className="w-full flex pt-10 pl-8 lg:pt-5 lg:pl-10 justify-between">
+        <h1 className="text-2xl">Lista de Produtos</h1>
+        <ButtonCustomized title="Adicionar Produto" />
+      </div>
+
+      <Table headers={productHeaders} rows={productRows} api="product" />
+    </>
   )
 }
