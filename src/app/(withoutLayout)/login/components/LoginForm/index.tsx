@@ -74,17 +74,6 @@ export function LoginForm() {
             Entrar
           </Button>
         </form>
-        <p className="text-sm text-gray-500">
-          Cria novo usuário?
-          <Link
-            className="text-gray-900"
-            href="#"
-            onClick={(e) => e.preventDefault()}
-          >
-            {' '}
-            Clique aqui
-          </Link>
-        </p>
       </div>
     </>
   )

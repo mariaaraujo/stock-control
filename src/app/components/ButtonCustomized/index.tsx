@@ -2,13 +2,14 @@
 
 import { Button } from '@material-tailwind/react'
 import { useState } from 'react'
-import { AddProduct } from '../AddProduct'
+import { AddProduct } from './components/AddProduct'
 
 interface ButtonCustomizedProps {
   title: string
+  type: string
 }
 
-export function ButtonCustomized({ title }: ButtonCustomizedProps) {
+export function ButtonCustomized({ title, type }: ButtonCustomizedProps) {
   const [openModal, setOpenModal] = useState(false)
 
   return (
@@ -21,7 +22,11 @@ export function ButtonCustomized({ title }: ButtonCustomizedProps) {
         {title}
       </Button>
 
-      <AddProduct openModal={openModal} setOpenModal={setOpenModal} />
+      {type == 'product' ? (
+        <AddProduct openModal={openModal} setOpenModal={setOpenModal} />
+      ) : (
+        <></>
+      )}
     </>
   )
 }

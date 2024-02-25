@@ -37,7 +37,9 @@ export class UserService implements UserInterface {
         }
       }
 
-      return { status: 200, message: { alreadyRegistered } }
+      const insertUser = await database.collection('user').insertOne(userDTO)
+
+      return { status: 200, message: insertUser?.insertedId?.toHexString() }
     } catch (error) {
       console.error('Error to create user: ', error)
 
@@ -184,7 +186,7 @@ export class UserService implements UserInterface {
 
       if (!user) {
         return this.handleError(
-          `Error to update user ${userId}: User not found`,
+          `Error to delete user ${userId}: User not found`,
         )
       }
 
@@ -194,11 +196,11 @@ export class UserService implements UserInterface {
 
       return { status: 200, message: `User ${userId} deleted` }
     } catch (e) {
-      console.error(`Error to update user ${userId}: `, e)
+      console.error(`Error to delete user ${userId}: `, e)
       return {
         status: 400,
         message: {
-          error: `Error to update user ${userId}: ` + e,
+          error: `Error to delete user ${userId}: ` + e,
         },
       }
     }

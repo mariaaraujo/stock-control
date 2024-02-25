@@ -3,7 +3,7 @@
 import { Card, Typography } from '@material-tailwind/react'
 import { Edit, Pencil, Trash } from 'lucide-react'
 import { useState } from 'react'
-import { AddProduct } from '../AddProduct'
+import { AddProduct } from '../ButtonCustomized/components/AddProduct'
 
 interface TableProps {
   headers: string[]

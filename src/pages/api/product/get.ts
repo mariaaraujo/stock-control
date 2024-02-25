@@ -1,7 +1,7 @@
-import { UserService } from '@/service/user/User'
+import { ProductService } from '@/service/products/Product'
 import type { NextApiRequest, NextApiResponse } from 'next'
 
-const userService = new UserService()
+const productService = new ProductService()
 
 export default async function handler(
   req: NextApiRequest,
@@ -21,17 +21,17 @@ export default async function handler(
     }
 
     try {
-      const users = await userService.get(
+      const products = await productService.get(
         params?.page,
         params?.pageSize,
         params?.filter,
         params?.orderBy,
       )
 
-      return res.status(200).send(users)
+      return res.status(200).send(products)
     } catch (e) {
-      console.error('Error to get users: ', JSON.stringify(e))
-      return res.status(400).send({ error: 'Error to get users : ' + e })
+      console.error('Error to get products: ', JSON.stringify(e))
+      return res.status(400).send({ error: 'Error to get products : ' + e })
     }
   } else {
     return res.status(405).json({ error: 'Method not allowed' })

@@ -1,7 +1,6 @@
 import { cookies } from 'next/headers'
 import { redirect } from 'next/navigation'
 import { Table } from '../components/Table'
-import { AddProduct } from '../components/AddProduct'
 import { ButtonCustomized } from '../components/ButtonCustomized'
 
 export default async function Home() {
@@ -21,7 +20,7 @@ export default async function Home() {
     <>
       <div className="w-full flex pt-10 pl-8 lg:pt-5 lg:pl-10 justify-between">
         <h1 className="text-2xl">Lista de Produtos</h1>
-        <ButtonCustomized title="Adicionar Produto" />
+        <ButtonCustomized title="Adicionar Produto" type="product" />
       </div>
 
       <Table headers={productHeaders} rows={productRows} api="product" />

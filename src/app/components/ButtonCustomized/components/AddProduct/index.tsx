@@ -14,7 +14,7 @@ import { useForm } from 'react-hook-form'
 import { yupResolver } from '@hookform/resolvers/yup'
 
 import { ProductFormSchema, ProductFormType, setProducts } from './form'
-import { Loading } from '../Loading'
+import { Loading } from '../../../Loading'
 import axios from 'axios'
 
 interface AddProductProps {
