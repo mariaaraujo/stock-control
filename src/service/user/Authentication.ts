@@ -1,8 +1,5 @@
-import { ObjectId } from 'mongodb'
-import bcrypt from 'bcrypt'
+import { ResponseDTO, UserLogin } from '@/dtos'
 
-import { ResponseDTO, UserDTO, UserLogin, UserResponse } from '@/dtos'
-import { database } from '@/config'
 import { UserService } from './User'
 import { HashComparer } from '../cryptography/BCryptAdapter'
 

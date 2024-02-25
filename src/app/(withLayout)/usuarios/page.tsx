@@ -21,10 +21,10 @@ export default async function Users() {
     <>
       <div className="w-full flex pt-10 pl-8 lg:pt-5 lg:pl-10 justify-between">
         <h1 className="text-2xl">Lista de Usuários</h1>
-        <ButtonCustomized title="Adicionar Usuário" type="user" />
+        {/* <ButtonCustomized title="Adicionar Usuário" type="user"  /> */}
       </div>
 
-      <Table headers={userHeaders} rows={userRows} api="user" />
+      {/* <Table headers={userHeaders} rows={userRows} api="user" /> */}
     </>
   )
 }

@@ -37,6 +37,8 @@ export class UserService implements UserInterface {
         }
       }
 
+      userDTO.password = await this.hashPassword(userDTO.password)
+
       const insertUser = await database.collection('user').insertOne(userDTO)
 
       return { status: 200, message: insertUser?.insertedId?.toHexString() }

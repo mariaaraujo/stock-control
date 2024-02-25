@@ -7,28 +7,28 @@ export default async function handler(
   req: NextApiRequest,
   res: NextApiResponse,
 ) {
-  if (req.method === 'DELETE') {
-    const productId = req.query.id?.toString()
+  if (req.method === 'GET') {
+    const productId = req.query.productId?.toString()
 
     if (!productId) {
-      console.error('Error to delete Product: Missing productId')
+      console.error('Error to update Product: Missing productId')
       return res.status(400).send({
-        error: 'Error to delete Product: Missing productId',
+        error: 'Error to update Product: Missing productId',
       })
     }
 
     try {
-      const product = await productService.delete(productId)
+      const product = await productService.getById(productId)
 
       return res.status(200).send(product)
     } catch (error) {
       console.error(
-        `Error to delete Product ${productId}: `,
+        `Error to update Product ${productId}: `,
         JSON.stringify(error),
       )
       return res
         .status(400)
-        .send({ error: `Error to delete Product ${productId}: ` + error })
+        .send({ error: `Error to update Product ${productId}: ` + error })
     }
   } else {
     return res.status(405).json({ error: 'Method not allowed' })

@@ -1,7 +1,7 @@
 export const Loading = () => {
   return (
     <div
-      className="fixed flex items-center justify-center h-full w-full z-[999] top-0 left-0 bg-black opacity-60"
+      className="fixed flex items-center justify-center h-full w-full z-[999999] top-0 left-0 bg-black opacity-60"
       role="status"
       id="loading-container"
     >

@@ -8,25 +8,14 @@ export default async function handler(
   res: NextApiResponse,
 ) {
   if (req.method === 'GET') {
-    const page = req.query.page?.toString()
-    const pageSize = req.query.pageSize?.toString()
     const filter = req.query.filter?.toString()
-    const orderBy = req.query.orderBy?.toString()
 
     const params = {
-      page: page ? parseInt(page) : 1,
-      pageSize: pageSize ? parseInt(pageSize) : 10,
       filter: filter ? JSON.parse(filter) : {},
-      orderBy: orderBy ? JSON.parse(orderBy) : {},
     }
 
     try {
-      const products = await productService.get(
-        params?.page,
-        params?.pageSize,
-        params?.filter,
-        params?.orderBy,
-      )
+      const products = await productService.get(params?.filter)
 
       return res.status(200).send(products)
     } catch (e) {

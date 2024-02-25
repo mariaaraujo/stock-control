@@ -4,19 +4,25 @@ import { Card, Typography } from '@material-tailwind/react'
 import { Edit, Pencil, Trash } from 'lucide-react'
 import { useState } from 'react'
 import { AddProduct } from '../ButtonCustomized/components/AddProduct'
+import { DeleteModal } from '../DeleteModal'
 
 interface TableProps {
   headers: string[]
   rows: any
   api: string
+  userId: string
+  refresh(): Promise<void>
 }
 
-export function Table({ headers, rows, api }: TableProps) {
+export function Table({ headers, rows, api, refresh, userId }: TableProps) {
   const [openEditModal, setOpenEditModal] = useState(false)
   const [openDeleteModal, setOpenDeleteModal] = useState(false)
   const [itemId, setItemId] = useState('')
 
   const renderCell = (data: any, type: string, index: number) => {
+    if (type === 'ID') {
+      return null
+    }
     const isLast = index === rows.length - 1
     const classes = isLast ? 'py-4' : 'py-4 border-b border-blue-gray-50'
 
@@ -28,7 +34,7 @@ export function Table({ headers, rows, api }: TableProps) {
           color="blue-gray"
           className="font-normal"
         >
-          {typeof data === 'number' ? `R$ ${data.toFixed(2)}` : data}
+          {data}
         </Typography>
       </td>
     )
@@ -40,21 +46,26 @@ export function Table({ headers, rows, api }: TableProps) {
         <table className="w-full min-w-max table-auto text-left">
           <thead>
             <tr>
-              {headers.map((head) => (
-                <th
-                  key={head}
-                  className="border-b border-blue-gray-100 bg-blue-gray-50 py-4"
-                >
-                  <Typography
-                    placeholder=""
-                    variant="small"
-                    color="blue-gray"
-                    className="font-normal leading-none opacity-70"
+              {headers.map((head) => {
+                if (head === 'ID') {
+                  return null
+                }
+                return (
+                  <th
+                    key={head}
+                    className="border-b border-blue-gray-100 bg-blue-gray-50 py-4"
                   >
-                    {head}
-                  </Typography>
-                </th>
-              ))}
+                    <Typography
+                      placeholder=""
+                      variant="small"
+                      color="blue-gray"
+                      className="font-normal leading-none opacity-70"
+                    >
+                      {head}
+                    </Typography>
+                  </th>
+                )
+              })}
             </tr>
           </thead>
           <tbody>
@@ -80,7 +91,10 @@ export function Table({ headers, rows, api }: TableProps) {
                     <Typography
                       placeholder=""
                       as="button"
-                      onClick={() => setOpenDeleteModal(true)}
+                      onClick={() => {
+                        setItemId(rowData['ID'])
+                        setOpenDeleteModal(true)
+                      }}
                       variant="small"
                       color="red"
                     >
@@ -93,11 +107,23 @@ export function Table({ headers, rows, api }: TableProps) {
           </tbody>
         </table>
       </Card>
+
+      <DeleteModal
+        setOpenModal={setOpenDeleteModal}
+        openModal={openDeleteModal}
+        refresh={refresh}
+        api={api}
+        itemId={itemId}
+      />
+
       {api == 'product' ? (
         <AddProduct
           setOpenModal={setOpenEditModal}
           openModal={openEditModal}
           productId={itemId}
+          setProductId={setItemId}
+          userId={userId}
+          refresh={refresh}
         />
       ) : (
         <></>

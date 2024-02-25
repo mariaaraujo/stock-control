@@ -4,17 +4,13 @@ import * as yup from 'yup'
 
 export type ProductFormType = {
   name: string
-  price: number
+  price: string
   quantity: number
 }
 
 export const ProductFormSchema = yup.object({
   name: yup.string().required('O Nome é obrigatório'),
-  price: yup
-    .number()
-    .transform((value) => (Number.isNaN(value) ? null : value))
-    .nullable()
-    .required('O Preço é obrigatório'),
+  price: yup.string().required('O Preço é obrigatório'),
   quantity: yup
     .number()
     .transform((value) => (Number.isNaN(value) ? null : value))
@@ -27,6 +23,9 @@ export const setProducts = (
   setValue: UseFormSetValue<ProductFormType>,
 ) => {
   setValue('name', product.name)
-  setValue('price', product.price)
+  setValue(
+    'price',
+    `R$ ${product.price.toFixed(2).toString().replace('.', ',')}`,
+  )
   setValue('quantity', product.quantity)
 }

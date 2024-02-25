@@ -13,12 +13,7 @@ interface ProductInterface {
 
   getById(productId: string): Promise<ProductResponse | null>
 
-  get: (
-    skip: number,
-    limit: number,
-    filter?: { name?: string },
-    orderBy?: any,
-  ) => Promise<ResponseDTO>
+  get: (filter?: { name?: string }) => Promise<ResponseDTO>
 }
 
 export class ProductService implements ProductInterface {
@@ -59,7 +54,7 @@ export class ProductService implements ProductInterface {
       return {
         id: productCursor?._id.toHexString(),
         name: productCursor?.name,
-        price: productCursor?.priceole,
+        price: productCursor?.price,
         quantity: productCursor?.quantity,
         createdAt: productCursor?.createdAt,
         userId: productCursor?.userId,
@@ -145,19 +140,12 @@ export class ProductService implements ProductInterface {
     }
   }
 
-  public async get(
-    pageNumber: number = 0,
-    pageSize: number = 20,
-    filter?: { name?: string },
-    orderBy?: any,
-  ): Promise<ResponseDTO> {
+  public async get(filter?: { name?: string }): Promise<ResponseDTO> {
     try {
       const productsResponse = await database
         .collection('product')
         .find(filter!)
-        .skip((pageNumber - 1) * pageSize)
-        .limit(pageSize)
-        .sort(orderBy ?? {})
+        // .sort(orderBy ?? {})
         .toArray()
 
       const products: ProductResponse[] = []

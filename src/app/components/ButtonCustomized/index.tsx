@@ -7,9 +7,16 @@ import { AddProduct } from './components/AddProduct'
 interface ButtonCustomizedProps {
   title: string
   type: string
+  userId: string
+  refresh(): Promise<void>
 }
 
-export function ButtonCustomized({ title, type }: ButtonCustomizedProps) {
+export function ButtonCustomized({
+  title,
+  type,
+  userId,
+  refresh,
+}: ButtonCustomizedProps) {
   const [openModal, setOpenModal] = useState(false)
 
   return (
@@ -23,7 +30,12 @@ export function ButtonCustomized({ title, type }: ButtonCustomizedProps) {
       </Button>
 
       {type == 'product' ? (
-        <AddProduct openModal={openModal} setOpenModal={setOpenModal} />
+        <AddProduct
+          openModal={openModal}
+          setOpenModal={setOpenModal}
+          userId={userId}
+          refresh={refresh}
+        />
       ) : (
         <></>
       )}

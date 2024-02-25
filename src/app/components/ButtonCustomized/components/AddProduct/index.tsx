@@ -16,16 +16,31 @@ import { yupResolver } from '@hookform/resolvers/yup'
 import { ProductFormSchema, ProductFormType, setProducts } from './form'
 import { Loading } from '../../../Loading'
 import axios from 'axios'
+import { handleChangeCurrency, handleNumericChange } from '@/utils'
+import { Product, ProductDTO } from '@/dtos'
+
+interface NormalizedValues {
+  userId: string
+  price: number
+  name: string
+  quantity: number
+}
 
 interface AddProductProps {
   openModal: boolean
   setOpenModal: Dispatch<SetStateAction<boolean>>
+  setProductId?: Dispatch<SetStateAction<string>>
   productId?: string
+  userId: string
+  refresh(): Promise<void>
 }
 export function AddProduct({
   openModal,
   setOpenModal,
   productId,
+  setProductId,
+  userId,
+  refresh,
 }: AddProductProps) {
   const [showLoading, setShowLoading] = useState(false)
 
@@ -43,7 +58,7 @@ export function AddProduct({
     setShowLoading(true)
     try {
       const { data, status } = await axios.get(
-        `/api/product/getById?id=${productId}`,
+        `/api/product/getById?productId=${productId}`,
       )
       if (status == 200) {
         setProducts(data, setValue)
@@ -55,13 +70,59 @@ export function AddProduct({
     }
   }
 
+  async function createProduct(values: NormalizedValues) {
+    try {
+      const { status } = await axios.post('/api/product/create', values)
+
+      if (status == 200) {
+        refresh()
+        setOpenModal(false)
+        reset()
+      }
+
+      setShowLoading(false)
+    } catch (error) {
+      setShowLoading(false)
+      console.error(error)
+    }
+  }
+
+  async function updateProduct(values: NormalizedValues) {
+    setShowLoading(true)
+    try {
+      const { status } = await axios.patch(
+        `/api/product/update?productId=${productId}`,
+        values,
+      )
+      if (status == 200) {
+        reset()
+        refresh()
+        setProductId && setProductId('')
+        setOpenModal(false)
+      }
+
+      setShowLoading(false)
+    } catch (error) {
+      setShowLoading(false)
+      console.error(error)
+    }
+  }
+
   async function onSubmit(values: ProductFormType) {
     setShowLoading(true)
     try {
-      const { data, status } = await axios.post('/api/product/create', values)
+      const nomalizedValues = {
+        ...values,
+        price: Number(
+          values.price.replace('R$', '').replace(' ', '').replace(',', '.'),
+        ),
+        userId,
+      }
 
-      if (status == 200) {
-        setOpenModal(false)
+      if (productId) {
+        await updateProduct(nomalizedValues)
+      } else {
+        await createProduct(nomalizedValues)
       }
       setShowLoading(false)
     } catch (error) {
@@ -76,7 +137,7 @@ export function AddProduct({
         getProductById()
       })()
     }
-  }, [])
+  }, [productId])
 
   return (
     <>
@@ -101,7 +162,10 @@ export function AddProduct({
               crossOrigin=""
               color="gray"
               label="Preço"
-              {...register('price')}
+              {...register('price', {
+                onChange: (e: any) =>
+                  handleChangeCurrency(e, 'price', setValue),
+              })}
             />
             <div className="-mt-3 text-red-700 text-xs">
               {errors.price?.message ?? ''}
@@ -110,7 +174,10 @@ export function AddProduct({
               crossOrigin=""
               color="gray"
               label="Quantidade"
-              {...register('quantity')}
+              {...register('quantity', {
+                onChange: (e: any) =>
+                  handleNumericChange(e, 'quantity', setValue),
+              })}
             />
             <div className="-mt-3 text-red-700 text-xs">
               {errors.quantity?.message ?? ''}
@@ -135,7 +202,7 @@ export function AddProduct({
               variant="gradient"
               color="green"
             >
-              <span>Adicionar</span>
+              <span>{productId ? 'Editar' : 'Adicionar'}</span>
             </Button>
           </DialogFooter>
         </form>
