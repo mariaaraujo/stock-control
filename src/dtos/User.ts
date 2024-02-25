@@ -4,13 +4,13 @@ export interface User extends UserDTO {
 
 export interface UserDTO {
   name: string
-  email: string
+  login: string
   password: string
   role: string
 }
 
 export interface UserUpdateDTO {
-  email: string
+  login: string
   password?: string
   name: string
   role: string
@@ -18,7 +18,11 @@ export interface UserUpdateDTO {
 
 export interface UserResponse {
   id: string
-  email: string
+  login: string
   name: string
   role: string
+}
+
+export interface UserLogin {
+  login: string
 }

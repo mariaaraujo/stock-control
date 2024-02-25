@@ -9,7 +9,7 @@ interface UserInterface {
   update: (userId: string, userUpdateDTO: UserUpdateDTO) => Promise<ResponseDTO>
   delete(userId: string): Promise<ResponseDTO>
 
-  getByEmail: (email: string) => Promise<UserResponse | null>
+  getByEmail: (login: string) => Promise<UserResponse | null>
   getById: (id: string) => Promise<UserResponse | null>
   get: (
     skip: number,
@@ -22,17 +22,17 @@ interface UserInterface {
 export class UserService implements UserInterface {
   public async create(userDTO: UserDTO): Promise<ResponseDTO> {
     try {
-      const alreadyRegistered = await this.getByEmail(userDTO.email)
+      const alreadyRegistered = await this.getByEmail(userDTO.login)
 
       if (alreadyRegistered) {
         console.error(
-          `Customer with document or email ${userDTO.email} is already registered to create customer.`,
+          `User with login ${userDTO.login} is already registered to create user.`,
         )
 
         return {
           status: 400,
           message: {
-            error: `Customer with document or email ${userDTO.email} is already registered to create customer.`,
+            error: `User with login ${userDTO.login} is already registered to create user.`,
           },
         }
       }
@@ -41,7 +41,7 @@ export class UserService implements UserInterface {
 
       const user = await database.collection('user').insertOne({
         name: userDTO.name,
-        email: userDTO.email,
+        login: userDTO.login,
         password: hashedPassword,
         role: userDTO.role,
       })
@@ -59,14 +59,14 @@ export class UserService implements UserInterface {
     }
   }
 
-  public async getByEmail(email: string): Promise<UserResponse | null> {
+  public async getByEmail(login: string): Promise<UserResponse | null> {
     try {
       const userCursor = await database.collection('user').findOne({
-        email: email,
+        login: login,
       })
 
       if (!userCursor) {
-        console.error(`User ${email} not found`)
+        console.error(`User ${login} not found`)
         return null
       }
 
@@ -74,11 +74,11 @@ export class UserService implements UserInterface {
         id: userCursor._id.toHexString(),
         role: userCursor?.role,
         name: userCursor.name,
-        email: userCursor.email,
+        login: userCursor.login,
       }
     } catch (error) {
       console.error(
-        `Error to check if user is already registered with email ${email}.`,
+        `Error to check if user is already registered with login ${login}.`,
         error,
       )
       return null
@@ -98,7 +98,7 @@ export class UserService implements UserInterface {
 
       return {
         id: userCursor?._id.toHexString(),
-        email: userCursor?.email,
+        login: userCursor?.login,
         name: userCursor?.name,
         role: userCursor?.role,
       }
@@ -124,19 +124,19 @@ export class UserService implements UserInterface {
         )
       }
 
-      if (userUpdateDTO.email !== user.email) {
-        const alreadyExists = await this.getByEmail(userUpdateDTO.email)
+      if (userUpdateDTO.login !== user.login) {
+        const alreadyExists = await this.getByEmail(userUpdateDTO.login)
 
         if (alreadyExists) {
           return this.handleError(
-            `Error to update user ${userId}: Email ${userUpdateDTO.email} already in use`,
+            `Error to update user ${userId}: Email ${userUpdateDTO.login} already in use`,
           )
         }
       }
 
       const userResponse: UserResponse = {
         id: userId,
-        email: userUpdateDTO.email,
+        login: userUpdateDTO.login,
         name: userUpdateDTO.name,
         role: userUpdateDTO?.role,
       }
@@ -151,7 +151,7 @@ export class UserService implements UserInterface {
           {
             $set: {
               name: userUpdateDTO.name,
-              email: userUpdateDTO.email,
+              login: userUpdateDTO.login,
               role: userUpdateDTO.role,
               password: userUpdateDTO.password,
             },
@@ -168,7 +168,7 @@ export class UserService implements UserInterface {
         {
           $set: {
             name: userUpdateDTO.name,
-            email: userUpdateDTO.email,
+            login: userUpdateDTO.login,
             role: userUpdateDTO.role,
           },
         },
@@ -232,7 +232,7 @@ export class UserService implements UserInterface {
       for (const userResponse of usersResponse) {
         const user: UserResponse = {
           id: userResponse._id.toHexString(),
-          email: userResponse.email,
+          login: userResponse.login,
           name: userResponse.name,
           role: userResponse.role,
         }
