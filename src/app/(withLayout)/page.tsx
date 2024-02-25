@@ -4,6 +4,7 @@ import { ProductContainer } from './components/ProductContainer'
 
 export default async function Home() {
   const isAuthenticated = cookies().get('stock-userId')
+  console.log(isAuthenticated)
 
   if (!isAuthenticated) {
     redirect('/login')
