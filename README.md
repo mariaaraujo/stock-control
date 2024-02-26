@@ -3,7 +3,7 @@
 Projeto para o gerenciamento de estoque, onde é possível gerenciar produtos individualmente.
 
 
-Para visitar a demo do projeto [clique aqui](https://nextjs.org/docs/deployment)
+Para visitar a demo do projeto [clique aqui](https://stock-control-silk.vercel.app/)
 
 
 ## Inicializar o projeto
