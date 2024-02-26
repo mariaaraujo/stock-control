@@ -1,6 +1,6 @@
-'use client'
+"use client";
 
-import { Dispatch, SetStateAction, useEffect, useState } from 'react'
+import { Dispatch, SetStateAction, useEffect, useState } from "react";
 import {
   Button,
   Dialog,
@@ -10,29 +10,29 @@ import {
   Input,
   Select,
   Option,
-} from '@material-tailwind/react'
+} from "@material-tailwind/react";
 
-import { Controller, useForm } from 'react-hook-form'
-import { yupResolver } from '@hookform/resolvers/yup'
+import { Controller, useForm } from "react-hook-form";
+import { yupResolver } from "@hookform/resolvers/yup";
 
-import { UserFormSchema, UserFormType, setUser } from './form'
-import { Loading } from '../../../Loading'
-import axios from 'axios'
-import { RoleType } from '@/enum/roleType'
+import { UserFormSchema, UserFormType, setUser } from "./form";
+import { Loading } from "../../../Loading";
+import axios from "axios";
+import { RoleType } from "@/enum/roleType";
 
 interface NormalizedValues {
-  name: string
-  login: string
-  password: string
-  role: string
+  name: string;
+  login: string;
+  password: string;
+  role: string;
 }
 
 interface AddUserProps {
-  openModal: boolean
-  setOpenModal: Dispatch<SetStateAction<boolean>>
-  refresh(): Promise<void>
-  setUserId?: Dispatch<SetStateAction<string>>
-  userId?: string
+  openModal: boolean;
+  setOpenModal: Dispatch<SetStateAction<boolean>>;
+  refresh(): Promise<void>;
+  setUserId?: Dispatch<SetStateAction<string>>;
+  userId?: string;
 }
 export function AddUser({
   openModal,
@@ -41,9 +41,9 @@ export function AddUser({
   userId,
   setUserId,
 }: AddUserProps) {
-  const [showLoading, setShowLoading] = useState(false)
+  const [showLoading, setShowLoading] = useState(false);
 
-  const roleType = RoleType
+  const roleType = RoleType;
 
   const {
     register,
@@ -54,87 +54,87 @@ export function AddUser({
     formState: { errors },
   } = useForm<UserFormType>({
     resolver: yupResolver(UserFormSchema),
-  })
+  });
 
   async function getUserById() {
-    setShowLoading(true)
+    setShowLoading(true);
     try {
       const { data, status } = await axios.get(
-        `/api/user/getById?userId=${userId}`,
-      )
+        `/api/user/getById?userId=${userId}`
+      );
       if (status == 200) {
-        setUser(data, setValue)
+        setUser(data, setValue);
       }
-      setShowLoading(false)
+      setShowLoading(false);
     } catch (error) {
-      setShowLoading(false)
-      console.error(error)
+      setShowLoading(false);
+      console.error(error);
     }
   }
 
   async function createUser(values: NormalizedValues) {
     try {
-      const { status } = await axios.post('/api/user/create', {
+      const { status } = await axios.post("/api/user/create", {
         ...values,
-        password: values.password == '' ? 'Mudar123' : values?.password,
-      })
+        password: values.password == "" ? "Mudar123" : values?.password,
+      });
 
       if (status == 200) {
-        refresh()
-        setOpenModal(false)
-        reset()
+        refresh();
+        setOpenModal(false);
+        reset();
       }
 
-      setShowLoading(false)
+      setShowLoading(false);
     } catch (error) {
-      setShowLoading(false)
-      console.error(error)
+      setShowLoading(false);
+      console.error(error);
     }
   }
 
   async function updateUser(values: NormalizedValues) {
-    setShowLoading(true)
+    setShowLoading(true);
     try {
       const { status } = await axios.patch(
-        `/api/product/user?userId=${userId}`,
-        values,
-      )
+        `/api/user/update?userId=${userId}`,
+        values
+      );
       if (status == 200) {
-        reset()
-        refresh()
-        setUserId && setUserId('')
-        setOpenModal(false)
+        reset();
+        refresh();
+        setUserId && setUserId("");
+        setOpenModal(false);
       }
 
-      setShowLoading(false)
+      setShowLoading(false);
     } catch (error) {
-      setShowLoading(false)
-      console.error(error)
+      setShowLoading(false);
+      console.error(error);
     }
   }
 
   async function onSubmit(values: UserFormType) {
-    setShowLoading(true)
+    setShowLoading(true);
     try {
       if (userId) {
-        await updateUser(values)
+        await updateUser(values);
       } else {
-        await createUser(values)
+        await createUser(values);
       }
-      setShowLoading(false)
+      setShowLoading(false);
     } catch (error) {
-      setShowLoading(false)
-      console.error(error)
+      setShowLoading(false);
+      console.error(error);
     }
   }
 
   useEffect(() => {
     if (userId) {
-      ;(async () => {
-        getUserById()
-      })()
+      (async () => {
+        getUserById();
+      })();
     }
-  }, [userId])
+  }, [userId]);
 
   return (
     <>
@@ -142,7 +142,7 @@ export function AddUser({
 
       <Dialog placeholder="" open={openModal} handler={setOpenModal}>
         <DialogHeader placeholder="">
-          {userId ? 'Editar' : 'Adicionar'} Usuário
+          {userId ? "Editar" : "Adicionar"} Usuário
         </DialogHeader>
         <form onSubmit={handleSubmit(onSubmit)}>
           <DialogBody className="flex flex-col gap-4" placeholder="">
@@ -150,28 +150,28 @@ export function AddUser({
               crossOrigin=""
               color="gray"
               label="Nome"
-              {...register('name')}
+              {...register("name")}
             />
             <div className="-mt-3 text-red-700 text-xs">
-              {errors.name?.message ?? ''}
+              {errors.name?.message ?? ""}
             </div>
             <Input
               crossOrigin=""
               color="gray"
               label="Login"
-              {...register('login')}
+              {...register("login")}
             />
             <div className="-mt-3 text-red-700 text-xs">
-              {errors.login?.message ?? ''}
+              {errors.login?.message ?? ""}
             </div>
             <Input
               crossOrigin=""
               color="gray"
               label="Senha"
-              {...register('password')}
+              {...register("password")}
             />
             <div className="-mt-3 text-red-700 text-xs">
-              {errors.password?.message ?? ''}
+              {errors.password?.message ?? ""}
             </div>
 
             <Controller
@@ -188,7 +188,7 @@ export function AddUser({
               )}
             />
             <div className="-mt-3 text-red-700 text-xs">
-              {errors.role?.message ?? ''}
+              {errors.role?.message ?? ""}
             </div>
           </DialogBody>
           <DialogFooter placeholder="">
@@ -197,8 +197,8 @@ export function AddUser({
               variant="text"
               color="red"
               onClick={() => {
-                reset()
-                setOpenModal(false)
+                reset();
+                setOpenModal(false);
               }}
               className="mr-1"
             >
@@ -210,11 +210,11 @@ export function AddUser({
               variant="gradient"
               color="green"
             >
-              <span>{userId ? 'Editar' : 'Adicionar'}</span>
+              <span>{userId ? "Editar" : "Adicionar"}</span>
             </Button>
           </DialogFooter>
         </form>
       </Dialog>
     </>
-  )
+  );
 }

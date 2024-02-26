@@ -1,34 +1,32 @@
-'use client'
+"use client";
 
-import { Card, Typography } from '@material-tailwind/react'
-import { Edit, Pencil, Trash } from 'lucide-react'
-import { useState } from 'react'
-import { AddProduct } from '../ButtonCustomized/components/AddProduct'
-import { DeleteModal } from '../DeleteModal'
-import { AddUser } from '../ButtonCustomized/components/AddUser'
+import { Card, Typography } from "@material-tailwind/react";
+import { Edit, Pencil, Trash } from "lucide-react";
+import { useState } from "react";
+import { AddProduct } from "../ButtonCustomized/components/AddProduct";
+import { DeleteModal } from "../DeleteModal";
+import { AddUser } from "../ButtonCustomized/components/AddUser";
 
 interface TableProps {
-  headers: string[]
-  rows: any
-  api: string
-  userId: string
-  refresh(): Promise<void>
+  headers: string[];
+  rows: any;
+  api: string;
+  userId: string;
+  refresh(): Promise<void>;
 }
 
 export function Table({ headers, rows, api, refresh, userId }: TableProps) {
-  const [openEditModal, setOpenEditModal] = useState(false)
-  const [openDeleteModal, setOpenDeleteModal] = useState(false)
-  const [itemId, setItemId] = useState('')
+  const [openEditModal, setOpenEditModal] = useState(false);
+  const [openDeleteModal, setOpenDeleteModal] = useState(false);
+  const [itemId, setItemId] = useState("");
 
   const renderCell = (data: any, type: string, index: number) => {
-    if (type === 'ID') {
-      return null
+    if (type === "ID") {
+      return null;
     }
-    const isLast = index === rows.length - 1
-    const classes = isLast ? 'py-4' : 'py-4 border-b border-blue-gray-50'
 
     return (
-      <td key={type} className={classes}>
+      <td key={type} className="py-4 border-b border-blue-gray-50">
         <Typography
           placeholder=""
           variant="small"
@@ -38,8 +36,8 @@ export function Table({ headers, rows, api, refresh, userId }: TableProps) {
           {data}
         </Typography>
       </td>
-    )
-  }
+    );
+  };
 
   return (
     <>
@@ -48,8 +46,8 @@ export function Table({ headers, rows, api, refresh, userId }: TableProps) {
           <thead>
             <tr>
               {headers.map((head) => {
-                if (head === 'ID') {
-                  return null
+                if (head === "ID") {
+                  return null;
                 }
                 return (
                   <th
@@ -65,7 +63,7 @@ export function Table({ headers, rows, api, refresh, userId }: TableProps) {
                       {head}
                     </Typography>
                   </th>
-                )
+                );
               })}
             </tr>
           </thead>
@@ -74,15 +72,15 @@ export function Table({ headers, rows, api, refresh, userId }: TableProps) {
               return (
                 <tr key={index}>
                   {headers.map((header, idx) =>
-                    renderCell(rowData[header], header, idx),
+                    renderCell(rowData[header], header, idx)
                   )}
                   <td className="py-4 flex items-center gap-2 justify-center border-b border-blue-gray-50">
                     <Typography
                       placeholder=""
                       as="button"
                       onClick={() => {
-                        setItemId(rowData['ID'])
-                        setOpenEditModal(true)
+                        setItemId(rowData["ID"]);
+                        setOpenEditModal(true);
                       }}
                       variant="small"
                       color="blue"
@@ -93,8 +91,8 @@ export function Table({ headers, rows, api, refresh, userId }: TableProps) {
                       placeholder=""
                       as="button"
                       onClick={() => {
-                        setItemId(rowData['ID'])
-                        setOpenDeleteModal(true)
+                        setItemId(rowData["ID"]);
+                        setOpenDeleteModal(true);
                       }}
                       variant="small"
                       color="red"
@@ -103,7 +101,7 @@ export function Table({ headers, rows, api, refresh, userId }: TableProps) {
                     </Typography>
                   </td>
                 </tr>
-              )
+              );
             })}
           </tbody>
         </table>
@@ -117,7 +115,7 @@ export function Table({ headers, rows, api, refresh, userId }: TableProps) {
         itemId={itemId}
       />
 
-      {api == 'product' ? (
+      {api == "product" ? (
         <AddProduct
           setOpenModal={setOpenEditModal}
           openModal={openEditModal}
@@ -136,5 +134,5 @@ export function Table({ headers, rows, api, refresh, userId }: TableProps) {
         />
       )}
     </>
-  )
+  );
 }
