@@ -178,7 +178,7 @@ export function AddUser({
               name="role"
               control={control}
               render={({ field }) => (
-                <Select placeholder="" label="Selecione um perfil" {...field}>
+                <Select placeholder="" label="Selecione um cargo" {...field}>
                   {Object.entries(roleType).map(([key, value]) => (
                     <Option key={key} value={key}>
                       {value}

@@ -1,25 +1,26 @@
-'use client'
+"use client";
 
-import { useEffect, useState } from 'react'
+import { useEffect, useState } from "react";
 
-import { Loading } from '@/app/components'
-import { Table } from '@/app/components/Table'
-import { ButtonCustomized } from '@/app/components/ButtonCustomized'
-import axios from 'axios'
-import { UserResponse } from '@/dtos'
+import { Loading } from "@/app/components";
+import { Table } from "@/app/components/Table";
+import { ButtonCustomized } from "@/app/components/ButtonCustomized";
+import axios from "axios";
+import { UserResponse } from "@/dtos";
+import { RoleType } from "@/enum/roleType";
 
 interface UserContainerProps {
-  isAuthenticated: string
+  isAuthenticated: string;
 }
 
 export function UserContainer({ isAuthenticated }: UserContainerProps) {
-  const usersHeader = ['ID', 'Nome', 'Login', 'Perfil']
-  const [showLoading, setShowLoading] = useState(true)
-  const [users, setUsers] = useState<UserResponse[]>([])
+  const usersHeader = ["ID", "Nome", "Login", "Cargo"];
+  const [showLoading, setShowLoading] = useState(true);
+  const [users, setUsers] = useState<UserResponse[]>([]);
 
   async function getUsers() {
     try {
-      const { data, status } = await axios.get('/api/user/get')
+      const { data, status } = await axios.get("/api/user/get");
       if (status === 200) {
         setUsers(
           data?.message?.users?.map((item: UserResponse) => {
@@ -27,21 +28,21 @@ export function UserContainer({ isAuthenticated }: UserContainerProps) {
               ID: item.id,
               Nome: item.name,
               Login: item.login,
-              Perfil: item.role,
-            }
-          }),
-        )
-        setShowLoading(false)
+              Cargo: RoleType[item.role as keyof typeof RoleType] ?? item.role,
+            };
+          })
+        );
+        setShowLoading(false);
       }
     } catch (error) {
-      setShowLoading(false)
-      console.error(error)
+      setShowLoading(false);
+      console.error(error);
     }
   }
 
   useEffect(() => {
-    getUsers()
-  }, [])
+    getUsers();
+  }, []);
 
   return (
     <>
@@ -64,5 +65,5 @@ export function UserContainer({ isAuthenticated }: UserContainerProps) {
         refresh={getUsers}
       />
     </>
-  )
+  );
 }
